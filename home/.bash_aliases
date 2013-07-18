@@ -1,7 +1,12 @@
 ############################################################
 #  aliases
 ############################################################
-alias ls='ls --color=auto'
+if [[ 'Darwin' == `uname` ]]; then
+  alias ls='ls -G'
+else
+  alias ls='ls --color=auto'
+fi
+
 alias l='ls -CF'
 alias lrt='ls -lartkh'
 alias ll='ls -lkh'
