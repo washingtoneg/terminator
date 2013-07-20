@@ -18,6 +18,8 @@ if [[ -n "$PS1" ]]; then
   # update the values of LINES and COLUMNS.
   shopt -s checkwinsize
 
+  export TERM='xterm-256color'
+
   # set colors
   TXTBLD=$(tput bold)
   BLACK=$(tput setaf 0)
@@ -34,6 +36,7 @@ if [[ -n "$PS1" ]]; then
 
   use_color=false
 
+  PS1='\[$GREEN\]\u\[$BLUE\]@\[$GREEN\]\h\[$BLUE\] \W \$ \[$RESET\]'
 #  if [[ -s $HOME/.rvm/scripts/rvm ]] ; then source $HOME/.rvm/scripts/rvm ; fi
 fi
 
