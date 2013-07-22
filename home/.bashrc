@@ -126,14 +126,14 @@ if [[ -n "$PS1" ]]; then
         echo "$(echo `git status` | grep "nothing to commit" > /dev/null 2>&1; \
           if [ "$?" -eq "0" ]; then \
             # @4 - Clean repository - nothing to commit
-            echo "'$BIBlack$Time24h' '$BICyan$PathFull$BIGreen'""$(__git_ps1 " [%s]")"; \
+            echo "'$BICyan$PathFull$BIGreen'""$(__git_ps1 " [%s]")"; \
           else \
             # @5 - Changes to working tree
-            echo "'$BIBlack$Time24h' '$BICyan$PathFull$BIRed'""$(__git_ps1 " {%s}")"; \
+            echo "'$BICyan$PathFull$BIRed'""$(__git_ps1 " {%s}")"; \
         fi) " ; \
       else \
         # @2 - Prompt when not in GIT repo
-        echo "'$BICyan$UserName$BIBlue@$BIGreen$HOSTNAME' '$BIBlack$Time24h' '$BIYellow$PathFull$BIGreen'"; \
+        echo "'$BICyan$UserName$BIBlue@$BIGreen$HOSTNAME' '$BIYellow$PathFull$BIGreen'"; \
       fi)'"$NewLine\$ $Color_Off"
 fi
 
