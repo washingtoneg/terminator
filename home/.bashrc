@@ -139,6 +139,11 @@ fi
 
 export EDITOR=vim
 
+export GIT_AUTHOR_NAME=`whoami`
+export GIT_AUTHOR_EMAIL="$GIT_AUTHOR_NAME@`hostname`.com"
+export GIT_COMMITTER_NAME="$GIT_AUTHOR_NAME"
+export GIT_COMMITTER_EMAIL="$GIT_AUTHOR_EMAIL"
+
 #  if [[ -s $HOME/.rvm/scripts/rvm ]] ; then source $HOME/.rvm/scripts/rvm ; fi
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
 
