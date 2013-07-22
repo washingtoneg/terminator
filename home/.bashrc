@@ -144,6 +144,9 @@ export EDITOR=vim
 
 PATH=$PATH:$HOME/bin/:$HOME/.rvm/bin # Add RVM to PATH for scripting
 
+# make caps lock useful
+xmodmap -e 'clear Lock' -e 'keycode 0x42 = Escape'
+
 # get bash aliases defs
 if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
