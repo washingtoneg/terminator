@@ -120,20 +120,23 @@ if [[ -n "$PS1" ]]; then
   UserName="\u"
   Jobs="\j"
 
-  export PS1='$(git branch &>/dev/null; \
+  HostInfoWColor="$ICyan$UserName$IBlue@$IGreen$HostName"
+
+  export PS1="$HostInfoWColor $IYellow$PathFull"'$(git branch &>/dev/null; \
       if [ $? -eq 0 ]; then \
         echo "$(echo `git status` | grep "nothing to commit" > /dev/null 2>&1; \
           if [ "$?" -eq "0" ]; then \
-            # @4 - Clean repository - nothing to commit
-            echo "'$BICyan$PathFull$BIGreen'""$(__git_ps1 " [%s]")"; \
+            # Clean repository - nothing to commit
+            echo "'$IGreen'""$(__git_ps1 " [git: %s]")"; \
           else \
-            # @5 - Changes to working tree
-            echo "'$BICyan$PathFull$BIRed'""$(__git_ps1 " {%s}")"; \
+            # Changes to working tree
+            echo "'$IRed'""$(__git_ps1 " {git: %s}")"; \
         fi) " ; \
       else \
-        # @2 - Prompt when not in GIT repo
-        echo "'$BICyan$UserName$BIBlue@$BIGreen$HostName' '$BIYellow$PathFull$BIGreen'"; \
+        # Prompt when not in GIT repo
+        echo "'$IGreen'" ; \
       fi)'"$NewLine\$ $Color_Off"
+
 fi
 
 export EDITOR=vim
