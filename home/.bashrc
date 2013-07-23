@@ -40,7 +40,6 @@ if [[ -n "$PS1" ]]; then
 
   # Customize BASH PS1 prompt to show current GIT repository and branch.
 
-  # Reset
   Color_Off="\[\033[0m\]"       # Text Reset
 
   # Regular Colors
@@ -117,7 +116,7 @@ if [[ -n "$PS1" ]]; then
   PathShort="\W"
   PathFull="\w"
   NewLine="\n"
-  HostName="\n"
+  HostName="\h"
   UserName="\u"
   Jobs="\j"
 
@@ -133,7 +132,7 @@ if [[ -n "$PS1" ]]; then
         fi) " ; \
       else \
         # @2 - Prompt when not in GIT repo
-        echo "'$BICyan$UserName$BIBlue@$BIGreen$HOSTNAME' '$BIYellow$PathFull$BIGreen'"; \
+        echo "'$BICyan$UserName$BIBlue@$BIGreen$HostName' '$BIYellow$PathFull$BIGreen'"; \
       fi)'"$NewLine\$ $Color_Off"
 fi
 
