@@ -38,8 +38,7 @@ if [[ -n "$PS1" ]]; then
 
   source  $HOME/git/contrib/completion/git-prompt.sh
 
-  # Customize BASH PS1 prompt to show current GIT repository and branch.
-
+  # Customize BASH PS1 prompt to show current GIT repository and branch
   Color_Off="\[\033[0m\]"       # Text Reset
 
   # Regular Colors
@@ -120,23 +119,46 @@ if [[ -n "$PS1" ]]; then
   UserName="\u"
   Jobs="\j"
 
+  function soho_pwd() {
+    # svn info
+    stat .svn > /dev/null 2>&1
+    if [ $? -eq 0 ]; then
+        SURL=`svn info | grep URL | head -1 | perl -pe 's/URL: (.*)/\1/'`
+        if [ `echo $SURL | grep -E "branches|tags"` ]; then
+          SVER=`echo $SURL | perl -pe 's{.*/(branches|tags)/(.*)}{\1/\2}' | cut -d/ -f1-2`
+          SPTH=`echo $SURL | perl -pe 's{.*svnroot/(.*)/(branches|tags)/.*}{/\1}'`
+          SPWD="$SPTH/$SVER"
+          SCL=$IGreen
+        else
+          SPWD=`echo $SURL | perl -pe 's{.*svnroot/(.*)/trunk(.*)}{/\1/trunk}'`
+          SCL=$IYellow
+        fi
+      SvnInfoColor="$SCL[SVN: $SPWD]"
+    else
+      SvnInfoColor=""
+    fi
+
+    # git info
+    git branch >/dev/null 2>&1
+    if [ $? -eq 0 ]; then
+      GitBranch=`__git_ps1 "%s"`
+      git status | grep "nothing to commit" >/dev/null 2>&1
+      if [ $? -eq 0 ]; then
+        # Clean repository - nothing to commit
+        GitInfoColor="$IGreen[git: $GitBranch]"
+      else
+        # Changes to working tree
+        GitInfoColor="$IRed{git: $GitBranch}"
+      fi
+    else
+      GitInfoColor=""
+    fi
+
+    export PS1="$HostInfoWColor $IYellow$PathFull $SvnInfoColor$GitInfoColor$NewLine$ $Color_Off"
+  }
+
   HostInfoWColor="$ICyan$UserName$IBlue@$IGreen$HostName"
-
-  export PS1="$HostInfoWColor $IYellow$PathFull"'$(git branch &>/dev/null; \
-      if [ $? -eq 0 ]; then \
-        echo "$(echo `git status` | grep "nothing to commit" > /dev/null 2>&1; \
-          if [ "$?" -eq "0" ]; then \
-            # Clean repository - nothing to commit
-            echo "'$IGreen'""$(__git_ps1 " [git: %s]")"; \
-          else \
-            # Changes to working tree
-            echo "'$IRed'""$(__git_ps1 " {git: %s}")"; \
-        fi) " ; \
-      else \
-        # Prompt when not in GIT repo
-        echo "'$IGreen'" ; \
-      fi)'"$NewLine\$ $Color_Off"
-
+  export PROMPT_COMMAND=soho_pwd
 fi
 
 export EDITOR=vim
@@ -151,8 +173,10 @@ export GIT_COMMITTER_EMAIL="$GIT_AUTHOR_EMAIL"
 
 PATH=$PATH:$HOME/bin/:$HOME/.rvm/bin # Add RVM to PATH for scripting
 
-# make caps lock useful
-xmodmap -e 'clear Lock' -e 'keycode 0x42 = Escape'
+# make caps lock actually useful
+if command -v xmodmap >/dev/null 2>&1; then
+  xmodmap -e 'clear Lock' -e 'keycode 0x42 = Escape'
+fi
 
 # get bash aliases defs
 if [ -f ~/.bash_aliases ]; then
