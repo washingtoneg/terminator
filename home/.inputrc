@@ -1,7 +1,6 @@
 # bells suck
 set bell-style none
 set expand-tilde on
-set completion-ignore-case on
 set completion-query-items 30
 set show-all-if-ambiguous on
 
