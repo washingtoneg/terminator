@@ -167,6 +167,8 @@ export EDITOR=vim
 
 PATH=$PATH:$HOME/bin/:$HOME/.rvm/bin # Add RVM to PATH for scripting
 
+export hsr="$HOME/.homesick/repos/"
+
 # make caps lock actually useful
 if command -v xmodmap >/dev/null 2>&1; then
   xmodmap -e 'clear Lock' -e 'keycode 0x42 = Escape'

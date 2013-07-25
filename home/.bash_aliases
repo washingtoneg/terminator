@@ -28,3 +28,4 @@ alias h1='head -n1'
 alias vi='vim'
 alias g='git'
 alias sbp="source $HOME/.bash_profile"
+alias hr="cd $HOME/.homesick/repos"
