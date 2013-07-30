@@ -4,8 +4,6 @@ set expand-tilde on
 set completion-query-items 30
 set show-all-if-ambiguous on
 
-set horizontal-scroll-mode on
-
 "\e[1;5C": forward-word
 "\e[1;5D": backward-word
 
