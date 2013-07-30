@@ -133,6 +133,10 @@ if [[ -n "$PS1" ]]; then
           SPWD=`echo $SURL | perl -pe 's{.*svnroot/(.*)/trunk(.*)}{/\1/trunk}'`
           SCL=$IYellow
         fi
+        svn status | egrep '.+' > /dev/null 2>&1
+        if [ $? -eq 0 ]; then
+          SCL=$IRed
+        fi
       SvnInfoColor="$SCL[SVN: $SPWD]"
     else
       SvnInfoColor=""
