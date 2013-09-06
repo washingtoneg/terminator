@@ -1,17 +1,31 @@
 [color]
-  diff = auto
-  status = auto
-
+  ui = true
+[color "branch"]
+  current = bold green
+  local = bold yellow
+  remote = bold red
+[color "diff"]
+  frag = magenta bold
+  old = bold red
+  new = bold green
+  whitespace = white reverse
+[color "status"]
+  added = bold green
+  changed = bold red
+#  untracked = cyan reverse
+#  branch = magenta
 [alias]
-  st = status
-  sts = status -s
+  st = status -s
+  stw = status
   ci = commit -v
+  cia = commit --amend –C HEAD
   cl = clone
   co = checkout
   br = branch
   rso = remote show origin
-  # theirs
-  diff = diff --word-diff
+  # diffs
+  df = diff
+  dw = diff --word-diff
   dc = diff --cached
   # reset
   r = reset
@@ -25,12 +39,12 @@
   sa = stash apply
   ss = stash save
   # logs
-  ls = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate
-  ll = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --numstat
+  ls = log --graph --pretty=format:"%C(yellow)%h%C(bold)%Cred%d\\ %Creset%s%C(bold)%C(cyan)\\ [%cn]" --decorate
+  ll = log --graph --pretty=format:"%C(yellow)%h%C(bold)%Cred%d\\ %Creset%s%C(bold)%C(cyan)\\ [%cn]" --decorate --numstat
   lnc = log --pretty=format:"%h\\ %s\\ [%cn]"
-  lds = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=short
-  ld = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=relative
-  le = log --oneline --decorate
+  lds = log --graph --pretty=format:"%C(yellow)%h\\ %ad%C(bold)%Cred%d\\ %Creset%s%C(bold)%C(cyan)\\ [%cn]" --decorate --date=short
+  ld = log --graph --pretty=format:"%C(yellow)%h\\ %ad%C(bold)%Cred%d\\ %Creset%s%C(bold)%C(cyan)\\ [%cn]" --decorate --date=relative
+  le = log --graph --oneline --decorate
   fl = log -u
   dl = "!git ll -1"
   dlc = diff --cached HEAD^
