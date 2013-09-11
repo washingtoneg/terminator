@@ -14,6 +14,12 @@ if [[ -n "$PS1" ]]; then
   # ... or force ignoredups and ignorespace
   HISTCONTROL=ignoredups:ignorespace
 
+  # add timestamps to history
+  HISTTIMEFORMAT='%F %T '
+
+  # no empty command completion
+  shopt -s no_empty_cmd_completion
+
   # check the window size after each command and, if necessary,
   # update the values of LINES and COLUMNS.
   shopt -s checkwinsize
