@@ -15,6 +15,7 @@
 #  untracked = cyan reverse
 #  branch = magenta
 [alias]
+  a = add
   st = status -s
   stw = status
   ci = commit -v
@@ -26,7 +27,8 @@
   # diffs
   df = diff
   dw = diff --word-diff
-  dc = diff --cached
+  dc = diff --word-diff --cached
+  dcl = diff --cached
   # reset
   r = reset
   r1 = reset HEAD^
@@ -39,11 +41,11 @@
   sa = stash apply
   ss = stash save
   # logs
-  ls = log --graph --pretty=format:"%C(yellow)%h%C(bold)%Cred%d\\ %Creset%s%C(bold)%C(cyan)\\ [%cn]" --decorate
-  ll = log --graph --pretty=format:"%C(yellow)%h%C(bold)%Cred%d\\ %Creset%s%C(bold)%C(cyan)\\ [%cn]" --decorate --numstat
+  ls = log --graph --pretty=format:"%C(bold)%C(yellow)%h%C(bold)%Cred%d\\ %Creset%s%C(bold)%C(cyan)\\ [%cn]" --decorate
+  ll = log --graph --pretty=format:"%C(bold)%C(yellow)%h%C(bold)%Cred%d\\ %Creset%s%C(bold)%C(cyan)\\ [%cn]" --decorate --numstat
   lnc = log --pretty=format:"%h\\ %s\\ [%cn]"
-  lds = log --graph --pretty=format:"%C(yellow)%h\\ %ad%C(bold)%Cred%d\\ %Creset%s%C(bold)%C(cyan)\\ [%cn]" --decorate --date=short
-  ld = log --graph --pretty=format:"%C(yellow)%h\\ %ad%C(bold)%Cred%d\\ %Creset%s%C(bold)%C(cyan)\\ [%cn]" --decorate --date=relative
+  lds = log --graph --pretty=format:"%C(bold)%C(yellow)%h\\ %ad%C(bold)%Cred%d\\ %Creset%s%C(bold)%C(cyan)\\ [%cn]" --decorate --date=short
+  ld = log --graph --pretty=format:"%C(bold)%C(yellow)%h\\ %ad%C(bold)%Cred%d\\ %Creset%s%C(bold)%C(cyan)\\ [%cn]" --decorate --date=relative
   le = log --graph --oneline --decorate
   fl = log -u
   dl = "!git ll -1"
@@ -55,3 +57,6 @@
   list-alias = "!git config -l | grep alias | cut -c 7-"
   # show last tag
   lasttag = describe --tags --abbrev=0
+[push]
+  # limit no arg push behavior to just the current branch
+  default = tracking
