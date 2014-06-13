@@ -1,2 +1,3 @@
---type=text
 --ignore-dir=log
+--ignore-dir=sandcube
+--ignore-file=is:tags

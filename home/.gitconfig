@@ -27,8 +27,8 @@
   # diffs
   df = diff
   dw = diff --word-diff
-  dc = diff --word-diff --cached
-  dcl = diff --cached
+  dc = diff --cached
+  dcw = diff --word-diff --cached
   # reset
   r = reset
   r1 = reset HEAD^
@@ -60,3 +60,5 @@
 [push]
   # limit no arg push behavior to just the current branch
   default = tracking
+[core]
+	excludesfile = ~/.gitignore

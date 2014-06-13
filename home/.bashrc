@@ -176,6 +176,7 @@ export EDITOR=vim
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
 
 PATH=$PATH:$HOME/bin/:$HOME/.rvm/bin # Add RVM to PATH for scripting
+NODE_PATH='/usr/local/lib/jsctags:${NODE_PATH}'
 
 export hsr="$HOME/.homesick/repos/"
 
