@@ -3,6 +3,8 @@
 ############################################################
 if [[ 'Darwin' == `uname` ]]; then
   alias ls='ls -G'
+  alias ctags="`brew --prefix`/bin/ctags"
+  alias tagit="jsctags .; ctags -a -R -f ./tags ."
 else
   alias ls='ls --color=auto'
 fi
@@ -30,6 +32,3 @@ alias g='git'
 alias sbp="source $HOME/.bash_profile"
 alias hr="cd $HOME/.homesick/repos"
 alias rakeit="rake db:drop && rake db:create && rake db:migrate && rake db:seed"
-
-alias ctags="`brew --prefix`/bin/ctags"
-alias tagit="jsctags .; ctags -a -R -f ./tags ."
