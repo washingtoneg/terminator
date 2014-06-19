@@ -199,3 +199,7 @@ fi
 if [ -f ~/.bash_func ]; then
     . ~/.bash_func
 fi
+
+if [ -f $HOME/.homesick/repos/homeshick/homeshick.sh ]; then
+  source "$HOME/.homesick/repos/homeshick/homeshick.sh"
+fi
