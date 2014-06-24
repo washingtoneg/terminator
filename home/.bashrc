@@ -125,6 +125,10 @@ if [[ -n "$PS1" ]]; then
   UserName="\u"
   Jobs="\j"
 
+  star_char=`echo -e '\xE2\x98\x85\x0a'`
+  volt_char=`echo -e '\xE2\x9A\xA1'`
+  arrow_char=`echo -e '\xe2\x9e\x9c\x0a'`
+
   function soho_pwd() {
     # svn info
     stat .svn > /dev/null 2>&1
@@ -164,7 +168,7 @@ if [[ -n "$PS1" ]]; then
       GitInfoColor=""
     fi
 
-    export PS1="$HostInfoWColor $IYellow$PathFull $SvnInfoColor$GitInfoColor$NewLine$ $Color_Off"
+    export PS1="$HostInfoWColor $IYellow$PathFull $SvnInfoColor$GitInfoColor$NewLine$arrow_char $Color_Off"
   }
 
   HostInfoWColor="$ICyan$UserName$IBlue@$IGreen$HostName"
