@@ -128,6 +128,8 @@ if [[ -n "$PS1" ]]; then
   star_char=`echo -e '\xE2\x98\x85\x0a'`
   volt_char=`echo -e '\xE2\x9A\xA1'`
   arrow_char=`echo -e '\xe2\x9e\x9c\x0a'`
+  recycle_char=`echo -ne '\xe2\x99\xbb\x0a'`
+  circle_recycle_char=`echo -ne '\xe2\x99\xbc\x0a'`
 
   function soho_pwd() {
     # svn info
