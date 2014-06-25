@@ -10,7 +10,7 @@ if [ -f "$HOME/.bashrc" ]; then
   . "$HOME/.bashrc"
 fi
 
-for autoload_file in `ls -a .bash_autoload* 2>/dev/null`; do
+for autoload_file in `ls -a $HOME/.bash_autoload* 2>/dev/null`; do
   source $autoload_file
 done
 
