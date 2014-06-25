@@ -126,10 +126,16 @@ if [[ -n "$PS1" ]]; then
   Jobs="\j"
 
   star_char=`echo -e '\xE2\x98\x85\x0a'`
+  nofill_star_char=`echo -en '\xe2\x98\x86\x0a'`
   volt_char=`echo -e '\xE2\x9A\xA1'`
   arrow_char=`echo -e '\xe2\x9e\x9c\x0a'`
   recycle_char=`echo -ne '\xe2\x99\xbb\x0a'`
   circle_recycle_char=`echo -ne '\xe2\x99\xbc\x0a'`
+  yingyang_char=`echo -ne '\xe2\x98\xaf\x0a'`
+  notes_char=`echo -ne '\xe2\x99\xab\x0a'`
+  rook_char=`echo -ne '\xe2\x99\x9c\x0a'`
+  nofill_rook_char=`echo -ne '\xe2\x99\x96\x0a'`
+  fire_char=`echo -ne '\xe2\x98\xb2\x0a'`
 
   function soho_pwd() {
     # svn info
@@ -173,7 +179,7 @@ if [[ -n "$PS1" ]]; then
     export PS1="$HostInfoWColor $IYellow$PathFull $SvnInfoColor$GitInfoColor$NewLine$arrow_char $Color_Off"
   }
 
-  HostInfoWColor="$ICyan$UserName$IBlue@$IGreen$HostName"
+  HostInfoWColor="$IGreen$fire_char $ICyan$UserName$IBlue@$IGreen$HostName"
   export PROMPT_COMMAND=soho_pwd
 fi
 
