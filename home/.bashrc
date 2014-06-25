@@ -177,9 +177,7 @@ fi
 
 export EDITOR=vim
 
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
-
-PATH=$PATH:$HOME/bin/:$HOME/.rvm/bin # Add RVM to PATH for scripting
+PATH=$PATH:$HOME/bin/
 NODE_PATH='/usr/local/lib/jsctags:${NODE_PATH}'
 
 export hsr="$HOME/.homesick/repos/"
@@ -190,8 +188,8 @@ if command -v xmodmap >/dev/null 2>&1; then
 fi
 
 # get bash aliases defs
-if [ -f ~/.bash_aliases ]; then
-    . ~/.bash_aliases
+if [ -f "$HOME/.bash_aliases" ]; then
+    . "$HOME/.bash_aliases"
 fi
 
 # enable bash completion in interactive shells
@@ -200,8 +198,8 @@ if [ -f /etc/bash_completion ]; then
 fi
 
 # get bash functions
-if [ -f ~/.bash_func ]; then
-    . ~/.bash_func
+if [ -f "$HOME/.bash_func" ]; then
+    . "$HOME/.bash_func"
 fi
 
 if [ -f $HOME/.homesick/repos/homeshick/homeshick.sh ]; then
