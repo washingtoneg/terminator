@@ -32,3 +32,4 @@ alias g='git'
 alias sbp="source $HOME/.bash_profile"
 alias hr="cd $HOME/.homesick/repos"
 alias rakeit="rake db:drop && rake db:create && rake db:migrate && rake db:seed"
+alias beeline="beeline --color=true"
