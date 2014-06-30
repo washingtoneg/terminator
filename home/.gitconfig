@@ -57,8 +57,11 @@
   list-alias = "!git config -l | grep alias | cut -c 7-"
   # show last tag
   lasttag = describe --tags --abbrev=0
+  ctags = !.git/hooks/ctags
 [push]
   # limit no arg push behavior to just the current branch
   default = tracking
 [core]
-	excludesfile = ~/.gitignore
+  excludesfile = ~/.gitignore
+[init]
+  templatedir = ~/.git_template
