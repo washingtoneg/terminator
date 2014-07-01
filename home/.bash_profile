@@ -1,5 +1,7 @@
 # .bash_profile
 
+export PATH="$HOME/bin":"/usr/local/bin":$PATH
+
 # Source global definitions
 if [ -f /etc/bashrc ]; then
     . /etc/bashrc
@@ -19,6 +21,7 @@ if [[ 'Darwin' == `uname` ]]; then
     . $(brew --prefix)/etc/bash_completion
   fi
 fi
+
 
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
 
