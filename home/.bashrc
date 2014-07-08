@@ -26,6 +26,9 @@ if [[ -n "$PS1" ]]; then
 
   export TERM='xterm-256color'
 
+  # disable XON/XOFF so ctrl-s works
+  stty -ixon
+
   # set tput colors
   TXTBLD=$(tput bold)
   BLACK=$(tput setaf 0)
