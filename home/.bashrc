@@ -140,6 +140,13 @@ if [[ -n "$PS1" ]]; then
   nofill_rook_char=`echo -ne '\xe2\x99\x96\x0a'`
   fire_char=`echo -ne '\xe2\x98\xb2\x0a'`
 
+  SEGMENT_SEPARATOR='⮀'
+  diff_char='±'
+  branch_char='⭠'
+  detached_head_char='➦'
+  check_char='✔'
+  x_char='✘'
+
   function soho_pwd() {
     # svn info
     stat .svn > /dev/null 2>&1
@@ -170,10 +177,10 @@ if [[ -n "$PS1" ]]; then
       git status | grep "nothing to commit" >/dev/null 2>&1
       if [ $? -eq 0 ]; then
         # Clean repository - nothing to commit
-        GitInfoColor="$IGreen[git: $GitBranch]"
+        GitInfoColor="${IGreen}$branch_char $GitBranch $check_char$Color_Off"
       else
         # Changes to working tree
-        GitInfoColor="$IRed{git: $GitBranch}"
+        GitInfoColor="${IRed}$branch_char $GitBranch $x_char$Color_Off"
       fi
     else
       GitInfoColor=""

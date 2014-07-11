@@ -1,0 +1,6 @@
+homeshick:
+  pull:
+    - --force --batch
+  link:
+    - terminator --force
+    - vim-4-eva --force
