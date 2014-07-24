@@ -295,6 +295,22 @@ function spl() {
   mysql -e 'show processlist' | egrep $1
 }
 
+function mysql_find_col() {
+  EXPECTED_ARGS=2
+  if [ $# -ne $EXPECTED_ARGS ]; then
+    echo "ERROR invalid # of args"
+    echo "Usage: `basename $0` DBs cols"
+    return 65
+  fi
+
+  echo "mysql_find_col: searching dbs:$1 for $2"
+  mysql -e "SELECT TABLE_SCHEMA, TABLE_NAME \
+    FROM INFORMATION_SCHEMA.COLUMNS \
+    WHERE COLUMN_NAME regexp '$2' \
+      and TABLE_SCHEMA regexp '$1' \
+    group by 1, 2;"
+}
+
 function watch_proc() {
   while true; do
     clear
