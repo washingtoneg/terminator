@@ -33,7 +33,7 @@ function lowercase()  # move filenames to lowercase
   done
 }
 
-function fspaces()
+function no_spaces()
 {
   for file ; do
     filename=${file##*/}
@@ -45,11 +45,21 @@ function fspaces()
     newname="${dirname}/${nf}"
     if [ "$nf" != "$filename" ]; then
       mv "$file" "$newname"
-      echo "fspaces: $file --> $newname"
+      echo "no_spaces: $file --> $newname"
     else
-      echo "fspaces: $file not changed."
+      echo "no_spaces: $file not changed."
     fi
   done
+}
+
+function nuke_spaces()
+{
+  ruby -e 'files = Dir["./*"].select { |file| file.match(/ /) }
+    files.each do |file|
+      newname = file.gsub(/ /, "_")
+      puts "nuke_spaces: #{file} --> #{newname}"
+      File.rename(file, newname)
+    end'
 }
 
 function repeat()     # Repeat n times command
@@ -283,4 +293,16 @@ function add()
 
 function spl() {
   mysql -e 'show processlist' | egrep $1
+}
+
+function watch_proc() {
+  while true; do
+    clear
+    eval $*
+    sleep 5
+  done
+}
+
+function mvnk() {
+  mvn $* | grcat $HOME/.grc/mvn.config
 }

@@ -196,7 +196,8 @@ fi
 export EDITOR=vim
 
 PATH=$PATH:$HOME/bin/
-NODE_PATH='/usr/local/lib/jsctags:${NODE_PATH}'
+export NODE_PATH='/usr/local/lib/jsctags:${NODE_PATH}'
+export JRUBY_HOME=$HOME/.rvm/rubies/jruby-1.7.13/
 
 export hsr="$HOME/.homesick/repos/"
 
