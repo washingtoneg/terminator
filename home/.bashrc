@@ -209,7 +209,7 @@ fi
 
 # mysql env vars
 export mysql_hostname=`hostname | sed -E 's/\..+$//'`
-export MYSQL_PS1="mysql [\u@$mysql_hostname] [\d]> "
+export MYSQL_PS1="mysql:\u@$mysql_hostname:\d> "
 
 # get bash aliases defs
 if [ -f "$HOME/.bash_aliases" ]; then
