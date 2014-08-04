@@ -45,7 +45,7 @@ if [[ -n "$PS1" ]]; then
 
   use_color=false
 
-  source  $HOME/git/contrib/completion/git-prompt.sh
+  source  $HOME/git-prompt.sh
 
   # Customize BASH PS1 prompt to show current GIT repository and branch
   Color_Off="\[\033[0m\]"       # Text Reset
