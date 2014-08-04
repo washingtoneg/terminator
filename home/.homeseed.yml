@@ -1,7 +1,5 @@
-homeshick:
-  clone:
-    - https://github.com/rbuchss/terminator.git --batch
-    - https://github.com/rbuchss/vim-4-eva.git --batch
-  link:
-    - terminator --force
-    - vim-4-eva --force
+:repos:
+  terminator:
+    :origin: https://github.com/rbuchss/terminator.git
+  vim-4-eva:
+    :origin: https://github.com/rbuchss/vim-4-eva.git
