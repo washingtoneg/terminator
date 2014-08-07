@@ -107,11 +107,6 @@ if [ -f /etc/bash_completion ]; then
     . /etc/bash_completion
 fi
 
-# get bash functions
-if [ -f "$HOME/.bash_func" ]; then
-    . "$HOME/.bash_func"
-fi
-
 if [ -f $HOME/.homesick/repos/homeshick/homeshick.sh ]; then
   source "$HOME/.homesick/repos/homeshick/homeshick.sh"
   source "$HOME/.homesick/repos/homeshick/completions/homeshick-completion.bash"

@@ -31,6 +31,11 @@ for autoload_file in `ls -a $HOME/.bash_autoload* 2>/dev/null`; do
   source $autoload_file
 done
 
+# get bash functions
+if [ -f "$HOME/.bash_func" ]; then
+    . "$HOME/.bash_func"
+fi
+
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
 
 export PATH
