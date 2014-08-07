@@ -1,14 +1,11 @@
 ############################################################
 #  aliases
 ############################################################
-if [[ 'Darwin' == `uname` ]]; then
-  alias ls='ls -G'
-  alias ctags="`brew --prefix`/bin/ctags"
-  alias tagit="jsctags .; ctags -a -R -f ./tags ."
-else
-  alias ls='ls --color=auto'
+if [[ 'Linux' == `uname` ]]; then
+  alias ack='ack-grep'
 fi
 
+alias ls='ls --color=auto'
 alias l='ls -CF'
 alias lrt='ls -lartkh'
 alias ll='ls -lkh'
@@ -25,7 +22,6 @@ alias cp='cp -i'
 alias grep='grep --color=auto --exclude-dir="\.git" --exclude-dir="\.svn"'
 alias egrep='egrep --color=auto --exclude-dir="\.git" --exclude-dir="\.svn"'
 alias fgrep='fgrep --color=auto --exclude-dir="\.git" --exclude-dir="\.svn"'
-alias ack='ack-grep'
 alias t1='tail -n1'
 alias h1='head -n1'
 alias vi='vim'

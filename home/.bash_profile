@@ -1,10 +1,25 @@
+############################################################
 # .bash_profile
+############################################################
+export PATH="$HOME/bin:/usr/local/bin:$PATH"
 
-export PATH="$HOME/bin":"/usr/local/bin":$PATH
+if [[ 'Darwin' == `uname` ]]; then
+  # using gnu for coreutils vs bsd
+  export PATH="`brew --prefix coreutils`/libexec/gnubin:$PATH"
+  export MANPATH="`brew --prefix coreutils`/libexec/gnuman:$MANPATH"
+  eval `dircolors $HOME/.dir_colors`
+
+  if [ -f $(brew --prefix)/etc/bash_completion ]; then
+    . $(brew --prefix)/etc/bash_completion
+  fi
+  if [ -f $(brew --prefix)/etc/grc.bashrc ]; then
+    . "`brew --prefix grc`/etc/grc.bashrc"
+  fi
+fi
 
 # Source global definitions
 if [ -f /etc/bashrc ]; then
-    . /etc/bashrc
+  . /etc/bashrc
 fi
 
 # Get the aliases and functions
@@ -15,13 +30,6 @@ fi
 for autoload_file in `ls -a $HOME/.bash_autoload* 2>/dev/null`; do
   source $autoload_file
 done
-
-if [[ 'Darwin' == `uname` ]]; then
-  if [ -f $(brew --prefix)/etc/bash_completion ]; then
-    . $(brew --prefix)/etc/bash_completion
-  fi
-fi
-
 
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
 
