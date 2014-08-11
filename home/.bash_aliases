@@ -1,10 +1,6 @@
 ############################################################
 #  aliases
 ############################################################
-if [[ 'Linux' == `uname` ]]; then
-  alias ack='ack-grep'
-fi
-
 alias ls='ls --color=auto'
 alias l='ls -CF'
 alias lrt='ls -lartkh'
