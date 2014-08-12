@@ -180,7 +180,7 @@ function ni()       # network information
 
 function bash_stat()
 {
-  cut -f1 -d" " .bash_history | sort | uniq -c | sort -nr | head -n 10
+  cut -f1 -d" " $HOME/.bash_history | sort | uniq -c | sort -nr | head -n 10
 }
 
 alias hideme='history -d $((HISTCMD-1)) &&' $1
