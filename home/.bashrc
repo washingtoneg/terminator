@@ -17,12 +17,17 @@ if [[ -n "$PS1" ]]; then
   # add timestamps to history
   HISTTIMEFORMAT='%F %T '
 
+  #export HISTIGNORE="&:bg:fg:ll:h"
+
   # no empty command completion
   shopt -s no_empty_cmd_completion
 
   # check the window size after each command and, if necessary,
   # update the values of LINES and COLUMNS.
   shopt -s checkwinsize
+
+  shopt -s cdspell # cd spell guessing
+  shopt -s cdable_vars # if path not found assumes is var
 
   export TERM='xterm-256color'
 
