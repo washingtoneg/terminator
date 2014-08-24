@@ -6,8 +6,8 @@ set history-preserve-point on
 set show-all-if-ambiguous on
 set echo-control-characters off
 
-"\e[1;5C": forward-word
-"\e[1;5D": backward-word
+"\e[1;5C":forward-word
+"\e[1;5D":backward-word
 
-"\e[1;6C": end-of-line
-"\e[1;6D": beginning-of-line
+"\e[1;6C":end-of-line
+"\e[1;6D":beginning-of-line

@@ -30,13 +30,20 @@ if [[ -n "$PS1" ]]; then
   shopt -s cdable_vars # if path not found assumes is var
 
   export TERM='xterm-256color'
-
   # disable XON/XOFF so ctrl-s works
   stty -ixon
 
   source $HOME/git-prompt.sh
-
   source $HOME/.bash_styles
+
+  # make man page more readable
+  export LESS_TERMCAP_mb=$(printf "\e[1;31m")
+  export LESS_TERMCAP_md=$(printf "\e[1;31m")
+  export LESS_TERMCAP_me=$(printf "\e[0m")
+  export LESS_TERMCAP_se=$(printf "\e[0m")
+  export LESS_TERMCAP_so=$(printf "\e[1;44;33m")
+  export LESS_TERMCAP_ue=$(printf "\e[0m")
+  export LESS_TERMCAP_us=$(printf "\e[1;32m")
 
   # Customize BASH PS1 prompt to show current GIT repository and branch
   function soho_pwd() {
@@ -86,6 +93,7 @@ if [[ -n "$PS1" ]]; then
 fi
 
 export EDITOR=vim
+  export INPUTRC=$HOME/.inputrc
 
 #export NODE_PATH='/usr/local/lib/jsctags:${NODE_PATH}'
 export JRUBY_HOME=$HOME/.rvm/rubies/jruby-1.7.13/
