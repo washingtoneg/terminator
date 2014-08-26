@@ -187,14 +187,20 @@ alias hideme='history -d $((HISTCMD-1)) &&' $1
 
 function containsElement () {
   local e
-  for e in "${@:2}"; do [[ "$e" == "$1" ]] && return 0; done
-  return 1
+  for e in "${@:2}"; do
+    if [[ "$e" == "$1" ]]; then
+      echo 1
+      return 0 # bash exit code
+      fi
+  done
+  echo 0
+  return 1 # bash exit code
 }
 
 function clock()
 {
-  night_hours=('22' '23' '24' '01' '02' '03')
-  Cnight_hours=('07' '08' '09' '04' '05' '06')
+  night_hours=('22' '23' '00' '01' '02' '03')
+  Cnight_hours=('19' '20' '21' '04' '05' '06')
   while true; do
   xit='null'
   echo "${INVIS}"; read -s -t 1 -n 1 xit
@@ -205,9 +211,9 @@ function clock()
     clear
     timet=$(date +"%R" | sed -E 's/(.{2})/\1 /g' | awk /'/ {print $1}')
 
-    if [[ $(containsElement "$timet" "${night_hours[@]}") -eq 0 ]]; then echo "${GREEN}"
-    elif [[ $(containsElement "$timet" "${Cnight_hours[@]}") -eq 0 ]]; then echo "${BLUE}"
-    else echo "${CYAN}"
+    if [[ $(containsElement "$timet" "${night_hours[@]}") -eq 1 ]]; then echo "${GREEN}"
+    elif [[ $(containsElement "$timet" "${Cnight_hours[@]}") -eq 1 ]]; then echo "${BLUE}"
+    else echo "${YELLOW}"
     fi
     echo "==================================="
     echo "=========== $(date +"%r") ==========="
