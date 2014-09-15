@@ -102,7 +102,7 @@ function dirsize()
   rm -f /tmp/list
 }
 
-function find_exec()   # Find a file with pattern $1 in name and Execute $2 on it
+function find_exec()  # Find a file with pattern $1 in name and Execute $2 on it
 {
   # Check for proper number of command line args.
   EXPECTED_ARGS=2
@@ -211,9 +211,12 @@ function clock()
     clear
     timet=$(date +"%R" | sed -E 's/(.{2})/\1 /g' | awk /'/ {print $1}')
 
-    if [[ $(containsElement "$timet" "${night_hours[@]}") -eq 1 ]]; then echo "${GREEN}"
-    elif [[ $(containsElement "$timet" "${Cnight_hours[@]}") -eq 1 ]]; then echo "${BLUE}"
-    else echo "${YELLOW}"
+    if [[ $(containsElement "$timet" "${night_hours[@]}") -eq 1 ]]; then
+      echo "${GREEN}"
+    elif [[ $(containsElement "$timet" "${Cnight_hours[@]}") -eq 1 ]]; then
+      echo "${BLUE}"
+    else
+      echo "${YELLOW}"
     fi
     echo "==================================="
     echo "=========== $(date +"%r") ==========="
@@ -289,7 +292,8 @@ function mysql_find_col() {
   fi
 
   echo "mysql_find_col: searching dbs:$1 for $2"
-  mysql -e "SELECT TABLE_SCHEMA, TABLE_NAME, group_concat(COLUMN_NAME) MATCHING_COLUMNS \
+  mysql -e "SELECT TABLE_SCHEMA, TABLE_NAME, \
+    group_concat(COLUMN_NAME) MATCHING_COLUMNS \
     FROM INFORMATION_SCHEMA.COLUMNS \
     WHERE COLUMN_NAME regexp '$2' \
       and TABLE_SCHEMA regexp '$1' \
@@ -312,3 +316,47 @@ then
   alias mvn="colourify -c $HOME/.grc/mvn.config mvn"
   alias kat="colourify -c $HOME/.grc/mvn.config"
 fi
+
+function ssh() {
+  if [[ -z $TMUX ]]; then
+    command ssh $@
+  else
+    local remote=`echo $* | sed 's/\..*$//'`
+    local old_name="$(tmux display-message -p '#W')"
+    local renamed=0
+    # Save the current name
+    if [[ $remote != -* ]]; then
+      renamed=1
+      tmux rename-window $remote
+    fi
+    command ssh $@
+    if [[ $renamed == 1 ]]; then
+      tmux rename-window "$old_name"
+    fi
+  fi
+}
+
+# actually show real hostname in prompt
+# even if a localhost connection
+function mysql() {
+  remote_connection=false
+  while getopts "h" opt; do
+    case "$opt" in
+      h) remote_connection=true
+        ;;
+    esac
+  done
+
+  if [[ "$remote_connection" = true ]]; then
+    export MYSQL_PS1="`printf '\x0F'`[mysql] \u@\h:\d> "
+  else
+    export mysql_hostname=`hostname | sed -E 's/\..+$//'`
+    export MYSQL_PS1="`printf '\x0F'`[mysql] \u@$mysql_hostname:\d> "
+  fi
+
+  if command -v grcat >/dev/null 2>&1; then
+    command mysql $@ --pager='grcat $HOME/.grc/sql.config'
+  else
+    command mysql $@
+  fi
+}

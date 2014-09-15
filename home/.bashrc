@@ -93,7 +93,7 @@ if [[ -n "$PS1" ]]; then
 fi
 
 export EDITOR=vim
-  export INPUTRC=$HOME/.inputrc
+export INPUTRC=$HOME/.inputrc
 
 #export NODE_PATH='/usr/local/lib/jsctags:${NODE_PATH}'
 export JRUBY_HOME=$HOME/.rvm/rubies/jruby-1.7.13/
@@ -105,10 +105,6 @@ CDPATH=.:$HSR
 if command -v xmodmap >/dev/null 2>&1; then
   xmodmap -e 'clear Lock' -e 'keycode 0x42 = Escape'
 fi
-
-# mysql env vars
-export mysql_hostname=`hostname | sed -E 's/\..+$//'`
-export MYSQL_PS1="[mysql] \u@$mysql_hostname:\d> "
 
 # get bash aliases defs
 if [ -f "$HOME/.bash_aliases" ]; then
