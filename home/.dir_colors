@@ -72,7 +72,7 @@ OTHER_WRITABLE 48;5;10;38;5;21 # dir that is other-writable (o+w) and not sticky
 STICKY 48;5;21;38;5;15	# dir with the sticky bit set (+t) and not other-writable
 
 # This is for files with execute permission:
-EXEC 38;5;34
+EXEC 38;5;10
 
 # List any file extensions like '.gz' or '.tar' that you would like ls
 # to colorize below. Put the extension, a space, and the color init string.
@@ -168,21 +168,21 @@ EXEC 38;5;34
 .ogv 38;5;13
 .ogx 38;5;13
 
-# audio formats (cyan)
-.aac 38;5;45
-.au 38;5;45
-.flac 38;5;45
-.mid 38;5;45
-.midi 38;5;45
-.mka 38;5;45
-.mp3 38;5;45
-.mpc 38;5;45
-.ogg 38;5;45
-.ra 38;5;45
-.wav 38;5;45
+# audio formats
+.aac 38;5;11
+.au 38;5;11
+.flac 38;5;11
+.mid 38;5;11
+.midi 38;5;11
+.mka 38;5;11
+.mp3 38;5;11
+.mpc 38;5;11
+.ogg 38;5;11
+.ra 38;5;11
+.wav 38;5;11
 
 # http://wiki.xiph.org/index.php/MIME_Types_and_File_Extensions
-.axa 38;5;45
-.oga 38;5;45
-.spx 38;5;45
-.xspf 38;5;45
+.axa 38;5;11
+.oga 38;5;11
+.spx 38;5;11
+.xspf 38;5;11

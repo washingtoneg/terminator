@@ -17,7 +17,7 @@ if [[ -n "$PS1" ]]; then
   # add timestamps to history
   HISTTIMEFORMAT='%F %T '
 
-  #export HISTIGNORE="&:bg:fg:ll:h"
+  export HISTIGNORE="bg:fg:ls:ll:lrt"
 
   # no empty command completion
   shopt -s no_empty_cmd_completion
@@ -52,12 +52,15 @@ if [[ -n "$PS1" ]]; then
     if [ $? -eq 0 ]; then
         SURL=`svn info | grep URL | head -1 | perl -pe 's/URL: (.*)/\1/'`
         if [ `echo $SURL | grep -E "branches|tags"` ]; then
-          SVER=`echo $SURL | perl -pe 's{.*/(branches|tags)/(.*)}{\1/\2}' | cut -d/ -f1-2`
-          SPTH=`echo $SURL | perl -pe 's{.*svnroot/(.*)/(branches|tags)/.*}{/\1}'`
+          SVER=`echo $SURL \
+            | perl -pe 's{.*/(branches|tags)/(.*)}{\1/\2}' | cut -d/ -f1-2`
+          SPTH=`echo $SURL \
+            | perl -pe 's{.*svnroot/(.*)/(branches|tags)/.*}{/\1}'`
           SPWD="$SPTH/$SVER"
           SCL=$IGreen
         else
-          SPWD=`echo $SURL | perl -pe 's{.*svnroot/(.*)/trunk(.*)}{/\1/trunk}'`
+          SPWD=`echo $SURL \
+            | perl -pe 's{.*svnroot/(.*)/trunk(.*)}{/\1/trunk}'`
           SCL=$IYellow
         fi
         svn status | egrep '.+' > /dev/null 2>&1
@@ -85,7 +88,8 @@ if [[ -n "$PS1" ]]; then
       GitInfoColor=""
     fi
 
-    export PS1="$HostInfoWColor $IYellow$PathFull $SvnInfoColor$GitInfoColor$NewLine$arrow_char $Color_Off"
+    export PBJ="$HostInfoWColor $IYellow$PathFull"
+    export PS1="$PBJ $SvnInfoColor$GitInfoColor$NewLine$arrow_char $Color_Off"
   }
 
   HostInfoWColor="$IGreen$fire_char $ICyan$UserName$IBlue@$IGreen$HostName"
