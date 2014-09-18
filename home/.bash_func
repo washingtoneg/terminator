@@ -313,7 +313,7 @@ export GRC=`which grc 2>/dev/null`
 if [ "$TERM" != dumb ] && [ -n GRC ]
 then
   alias colourify="$GRC -es --colour=auto"
-  alias mvn="colourify -c $HOME/.grc/mvn.config mvn"
+  alias mvnk="colourify -c $HOME/.grc/mvn.config mvn"
   alias kat="colourify -c $HOME/.grc/mvn.config"
 fi
 
@@ -348,10 +348,10 @@ function mysql() {
   done
 
   if [[ "$remote_connection" = true ]]; then
-    export MYSQL_PS1="`printf '\x0F'`[mysql] \u@\h:\d> "
+    export MYSQL_PS1="[mysql] \u@\h:\d> "
   else
     export mysql_hostname=`hostname | sed -E 's/\..+$//'`
-    export MYSQL_PS1="`printf '\x0F'`[mysql] \u@$mysql_hostname:\d> "
+    export MYSQL_PS1="[mysql] \u@$mysql_hostname:\d> "
   fi
 
   if command -v grcat >/dev/null 2>&1; then
