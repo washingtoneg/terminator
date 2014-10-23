@@ -280,7 +280,7 @@ function add_col_rows()
 }
 
 function spl() {
-  mysql -e 'show processlist' | egrep $1
+  command mysql -e 'show processlist' | egrep $1
 }
 
 function mysql_find_col() {
@@ -292,7 +292,7 @@ function mysql_find_col() {
   fi
 
   echo "mysql_find_col: searching dbs:$1 for $2"
-  mysql -e "SELECT TABLE_SCHEMA, TABLE_NAME, \
+  command mysql -e "SELECT TABLE_SCHEMA, TABLE_NAME, \
     group_concat(COLUMN_NAME) MATCHING_COLUMNS \
     FROM INFORMATION_SCHEMA.COLUMNS \
     WHERE COLUMN_NAME regexp '$2' \
