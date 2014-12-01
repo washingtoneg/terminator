@@ -1,8 +1,109 @@
 ############################################################
-# functions
+# core functions
 ############################################################
-function swap()     # Swap 2 filenames around, if they exist
-{
+# helper to source file if it exists and is not zero in size
+function source_if_exists() {
+  if [[ -s $1 ]]; then
+    if [[ "$debug_source" == true ]]; then echo $1; fi
+    source $1
+  else
+    if [[ "$debug_source" == true ]]; then echo "WARN NO $1 FOUND"; fi
+  fi
+}
+
+function containsElement() {
+  local e
+  for e in "${@:2}"; do
+    if [[ "$e" == "$1" ]]; then
+      echo 1
+      return 0 # bash exit code
+      fi
+  done
+  echo 0
+  return 1 # bash exit code
+}
+
+# Temporarily add directories to PATH
+function add_path() {
+  if [ $# -lt 1 ] || [ $# -gt 2 ]; then
+    echo "Temporarily add to PATH"
+    echo "usage: apath [dir]"
+  else
+    PATH=$1:$PATH
+  fi
+}
+
+# Repeat n times command
+function repeat() {
+  local i max
+  max=$1; shift;
+  for ((i=1; i <= max ; i++)); do
+    eval "$@";
+  done
+}
+
+function watch_proc() {
+  sleepy_time=1
+  while true; do
+    clear
+    eval $*
+    sleep $sleepy_time
+  done
+}
+
+function ask() {
+  echo -n "${RED}$@" '[y/n] ' "${RESET}" ; read ans
+  case "$ans" in
+    y*|Y*) return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
+# get top fifteen most run commands
+function bash_stat() {
+  cut -f1 -d" " $HOME/.bash_history | sort | uniq -c | sort -nr | head -n 15
+}
+
+# ack history
+function hack() {
+  history | ack $1
+}
+
+############################################################
+# compressed file helpers
+############################################################
+# Handy Extract Program
+function extract() {
+  if [ -f $1 ] ; then
+    case $1 in
+     *.tar.bz2)   tar xvjf $1   ;;
+     *.tar.gz)  tar xvzf $1   ;;
+     *.bz2)     bunzip2 $1    ;;
+     *.rar)     unrar x $1    ;;
+     *.gz)    gunzip $1     ;;
+     *.tar)     tar xvf $1    ;;
+     *.tbz2)    tar xvjf $1   ;;
+     *.tgz)     tar xvzf $1   ;;
+     *.zip)     unzip $1    ;;
+     *.Z)     uncompress $1   ;;
+     *.7z)    7z x $1     ;;
+     *)       echo "'$1' cannot be extracted via >extract<" ;;
+    esac
+  else
+    echo "'$1' is not a valid file"
+  fi
+}
+
+# Creates an archive from given directory
+mktar() { tar cvf  "${1%%/}.tar"   "${1%%/}/"; }
+mktgz() { tar cvzf "${1%%/}.tar.gz"  "${1%%/}/"; }
+mktbz() { tar cvjf "${1%%/}.tar.bz2" "${1%%/}/"; }
+
+############################################################
+# file helpers
+############################################################
+# Swap 2 filenames around, if they exist
+function swap() {
   local TMPFILE=tmp.$$
 
   [ $# -ne 2 ] && echo "swap: 2 arguments needed" && return 1
@@ -14,8 +115,8 @@ function swap()     # Swap 2 filenames around, if they exist
   mv $TMPFILE "$2"
 }
 
-function lowercase()  # move filenames to lowercase
-{
+# changes filename to lowercase
+function lowercase() {
   for file ; do
     filename=${file##*/}
     case "$filename" in
@@ -33,8 +134,8 @@ function lowercase()  # move filenames to lowercase
   done
 }
 
-function no_spaces()
-{
+# converts spaces in filename to _
+function no_spaces() {
   for file ; do
     filename=${file##*/}
     case "$filename" in
@@ -52,8 +153,9 @@ function no_spaces()
   done
 }
 
-function nuke_spaces()
-{
+# finds all files and dirs in the pwd that have spaces in their name
+# and renames them with all spaces converted to _
+function nuke_spaces() {
   ruby -e 'files = Dir["./*"].select { |file| file.match(/ /) }
     files.each do |file|
       newname = file.gsub(/ /, "_")
@@ -62,39 +164,19 @@ function nuke_spaces()
     end'
 }
 
-function repeat()     # Repeat n times command
-{
-  local i max
-  max=$1; shift;
-  for ((i=1; i <= max ; i++)); do
-    eval "$@";
-  done
+# Find a file from pwd with pattern $1 in name and Execute $2 on it
+function find_exec() {
+  # Check for proper number of command line args.
+  EXPECTED_ARGS=2
+
+  if [ $# -ne $EXPECTED_ARGS ]; then
+    echo "ERROR: invaild # of args: Usage: fe pattern cmd"
+  else
+    find . -type f -iname '*'$1'*' -exec "${2:-file}" {} \; ;
+  fi
 }
 
-function extract()    # Handy Extract Program
-{
-   if [ -f $1 ] ; then
-     case $1 in
-       *.tar.bz2)   tar xvjf $1   ;;
-       *.tar.gz)  tar xvzf $1   ;;
-       *.bz2)     bunzip2 $1    ;;
-       *.rar)     unrar x $1    ;;
-       *.gz)    gunzip $1     ;;
-       *.tar)     tar xvf $1    ;;
-       *.tbz2)    tar xvjf $1   ;;
-       *.tgz)     tar xvzf $1   ;;
-       *.zip)     unzip $1    ;;
-       *.Z)     uncompress $1   ;;
-       *.7z)    7z x $1     ;;
-       *)       echo "'$1' cannot be extracted via >extract<" ;;
-     esac
-   else
-     echo "'$1' is not a valid file"
-   fi
-}
-
-function dirsize()
-{
+function dirsize() {
   du -shx * .[a-zA-Z0-9_]* 2> /dev/null | \
   egrep '^ *[0-9.]*[MG]' | sort -n > /tmp/list
   egrep '^ *[0-9.]*M' /tmp/list
@@ -102,103 +184,64 @@ function dirsize()
   rm -f /tmp/list
 }
 
-function find_exec()  # Find a file with pattern $1 in name and Execute $2 on it
-{
-  # Check for proper number of command line args.
-  EXPECTED_ARGS=2
-
-  if [ $# -ne $EXPECTED_ARGS ]; then
-    echo "ERROR: invaild # of args: Usage: fe pattern cmd"
-  else
-    find . -type f -iname '*'$1'*' -exec "${2:-file}" {} \;  ;
-  fi
-}
-
-function add_path()    # Temporarily add directories to PATH
-{
-  if [ $# -lt 1 ] || [ $# -gt 2 ]; then
-    echo "Temporarily add to PATH"
-    echo "usage: apath [dir]"
-  else
-    PATH=$1:$PATH
-  fi
-}
-
-function my_ps() { ps $@ -u $USER -o pid,%cpu,%mem,bsdtime,command ; }
-
-function killps()         # Kill by process name
-{
-  local pid pname sig="-TERM"   # Default signal
-  if [ "$#" -lt 1 ] || [ "$#" -gt 2 ]; then
-    echo "Usage: killps [-SIGNAL] pattern"
-    return;
-  fi
-  if [ $# = 2 ]; then sig=$1 ; fi
-  for pid in $(my_ps| awk '!/awk/ && $0~pat { print $1 }' pat=${!#} ) ; do
-    pname=$(my_ps | awk '$1~var { print $5 }' var=$pid )
-    if ask "Kill process $pid <$pname> with signal $sig?"
-#      then kill -9 $sig $pid
-      then kill -9 $pid
-    fi
-  done
-}
-
-function ask()
-{
-  echo -n "${RED}$@" '[y/n] ' "${RESET}" ; read ans
-  case "$ans" in
-    y*|Y*) return 0 ;;
-    *) return 1 ;;
-  esac
-}
-
-function my_ip()    # Get IP address
-{
+############################################################
+# host and network helpers
+############################################################
+# Get IP address
+function my_ip() {
   MY_IP=$(/sbin/ifconfig | awk '/inet/ { print $2 } ' | sed -e s/addr://)
 }
 
-function hi()       # Get current host related info
-{
+# Get current host related info
+function hi() {
   echo -e "${RED}You are logged on:${RESET}" ; hostname
   echo -e "\n${RED}Additionnal information:${RESET}" ; uname -a
-  echo -e "\n${RED}Current date :${RESET} " ; date
-  echo -e "\n${RED}Machine stats :${RESET}" ; uptime
-  echo -e "\n${RED}Memory stats :${RESET}" ; free
-  echo -e "\n${RED}Disk stats :${RESET}" ; df -kh
+  echo -e "\n${RED}Current date:${RESET} " ; date
+  echo -e "\n${RED}Machine stats:${RESET}" ; uptime
+  echo -e "\n${RED}Memory stats:${RESET}" ; free
+  echo -e "\n${RED}Disk stats:${RESET}" ; df -kh
   my_ip 2>&- ;
-  echo -e "\n${RED}Local IP Address :${RESET}" ; echo ${MY_IP:-"Not connected"}
+  echo -e "\n${RED}Local IP Address:${RESET}" ; echo ${MY_IP:-"Not connected"}
   echo -e "\n${YELLOW}Users logged on:${RESET}" ; w -h
 }
 
-function ni()       # network information
-{
+# network information
+function ni() {
   echo "--------------- Network Information ---------------"
   /sbin/ifconfig
   echo "---------------------------------------------------"
   echo -e "\nOpen connections : "; netstat;
 }
 
-function bash_stat()
-{
-  cut -f1 -d" " $HOME/.bash_history | sort | uniq -c | sort -nr | head -n 10
+############################################################
+# math helpers
+############################################################
+function trans() {
+  awk '{
+    for (i=1; i<=NF; i++) {
+      a[NR,i] = $i
+    }
+  }
+  NF>p { p = NF }
+  END {
+    for(j=1; j<=p; j++) {
+      str=a[1,j]
+      for(i=2; i<=NR; i++) {
+        str=str" "a[i,j];
+      }
+      print str
+    }
+  }' $1
 }
 
-alias hideme='history -d $((HISTCMD-1)) &&' $1
-
-function containsElement () {
-  local e
-  for e in "${@:2}"; do
-    if [[ "$e" == "$1" ]]; then
-      echo 1
-      return 0 # bash exit code
-      fi
-  done
-  echo 0
-  return 1 # bash exit code
+function add_col_rows() {
+  awk '{total = total + $1} END{print total}' $1
 }
 
-function clock()
-{
+############################################################
+# misc
+############################################################
+function clock() {
   night_hours=('22' '23' '00' '01' '02' '03')
   Cnight_hours=('19' '20' '21' '04' '05' '06')
   while true; do
@@ -212,11 +255,11 @@ function clock()
     timet=$(date +"%R" | sed -E 's/(.{2})/\1 /g' | awk /'/ {print $1}')
 
     if [[ $(containsElement "$timet" "${night_hours[@]}") -eq 1 ]]; then
-      echo "${GREEN}"
+      echo "${GREEN}${TXTBLD}"
     elif [[ $(containsElement "$timet" "${Cnight_hours[@]}") -eq 1 ]]; then
-      echo "${BLUE}"
+      echo "${BLUE}${TXTBLD}"
     else
-      echo "${YELLOW}"
+      echo "${YELLOW}${TXTBLD}"
     fi
     echo "==================================="
     echo "=========== $(date +"%r") ==========="
@@ -225,60 +268,14 @@ function clock()
   done
 }
 
-function shot()     # Takes a screenshot of your size choice
-{
+# Linux only: Takes a screenshot of your size choice
+function shot() {
   import -frame -strip -quality 75 "$HOME/$(date +%s).png"
 }
 
-# Creates an archive from given directory
-mktar() { tar cvf  "${1%%/}.tar"   "${1%%/}/"; }
-mktgz() { tar cvzf "${1%%/}.tar.gz"  "${1%%/}/"; }
-mktbz() { tar cvjf "${1%%/}.tar.bz2" "${1%%/}/"; }
-
-function colortest()
-{
-  # set colors
-  echo "${BLACK} TEST test ${TXTBLD} TEST test ${RESET}"
-  echo "${RED} TEST test ${TXTBLD} TEST test ${RESET}"
-  echo "${GREEN} TEST test ${TXTBLD} TEST test ${RESET}"
-  echo "${YELLOW} TEST test ${TXTBLD} TEST test ${RESET}"
-  echo "${BLUE} TEST test ${TXTBLD} TEST test ${RESET}"
-  echo "${PURPLE} TEST test ${TXTBLD} TEST test ${RESET}"
-  echo "${CYAN} TEST test ${TXTBLD} TEST test ${RESET}"
-  echo "${WHITE} TEST test ${TXTBLD} TEST test ${RESET}"
-}
-
-function colortest2() {
-  for i in {0..255} ; do
-    printf "\x1b[38;5;${i}mcolour${i}\n"
-  done
-}
-
-function trans()
-{
-  awk '
-  {
-  for (i=1; i<=NF; i++)  {
-    a[NR,i] = $i
-  }
-  }
-  NF>p { p = NF }
-  END {
-  for(j=1; j<=p; j++) {
-    str=a[1,j]
-    for(i=2; i<=NR; i++){
-    str=str" "a[i,j];
-    }
-    print str
-  }
-  }' $1
-}
-
-function add_col_rows()
-{
-  awk '{total = total + $1}END{print total}' $1
-}
-
+############################################################
+# mysql helpers
+############################################################
 function spl() {
   command mysql -e 'show processlist' | egrep $1
 }
@@ -300,23 +297,71 @@ function mysql_find_col() {
     group by 1, 2;"
 }
 
-function watch_proc() {
-  sleepy_time=1
-  while true; do
-    clear
-    eval $*
-    sleep $sleepy_time
+# actually show real hostname in prompt
+# even if a localhost connection
+function mysql() {
+  export mysql_args="$@"
+  remote_connection=`ruby -e 'p ENV["mysql_args"].match(/\s*-h\s/) ? true : false'`
+
+  if [[ "$remote_connection" == true ]]; then
+    export MYSQL_PS1="[mysql] \u@\h:\d> "
+  else
+    mysql_hostname=`hostname | sed -E 's/\..+$//'`
+    export MYSQL_PS1="[mysql] \u@$mysql_hostname:\d> "
+  fi
+
+  if command -v grcat >/dev/null 2>&1; then
+    command mysql "$@" --pager='grcat $HOME/.grc/sql.config'
+  else
+    command mysql "$@"
+  fi
+}
+
+############################################################
+# process helpers
+############################################################
+function my_ps() { ps $@ -u $USER -o pid,%cpu,%mem,bsdtime,command ; }
+
+# Kill by process name
+function killps() {
+  local pid pname sig="-TERM"   # Default signal
+  if [ "$#" -lt 1 ] || [ "$#" -gt 2 ]; then
+    echo "Usage: killps [-SIGNAL] pattern"
+    return;
+  fi
+  if [ $# = 2 ]; then sig=$1 ; fi
+  for pid in $(my_ps| awk '!/awk/ && $0~pat { print $1 }' pat=${!#} ) ; do
+    pname=$(my_ps | awk '$1~var { print $5 }' var=$pid )
+    if ask "Kill process $pid <$pname> with signal $sig?"
+      then kill -9 $pid
+    fi
   done
 }
 
-export GRC=`which grc 2>/dev/null`
-if [ "$TERM" != dumb ] && [ -n GRC ]
-then
-  alias colourify="$GRC -es --colour=auto"
-  alias mvnk="colourify -c $HOME/.grc/mvn.config mvn"
-  alias kat="colourify -c $HOME/.grc/mvn.config"
-fi
+############################################################
+# style helpers
+############################################################
+function colortest() {
+  echo "${BLACK} TEST test ${TXTBLD} TEST test ${RESET}"
+  echo "${RED} TEST test ${TXTBLD} TEST test ${RESET}"
+  echo "${GREEN} TEST test ${TXTBLD} TEST test ${RESET}"
+  echo "${YELLOW} TEST test ${TXTBLD} TEST test ${RESET}"
+  echo "${BLUE} TEST test ${TXTBLD} TEST test ${RESET}"
+  echo "${PURPLE} TEST test ${TXTBLD} TEST test ${RESET}"
+  echo "${CYAN} TEST test ${TXTBLD} TEST test ${RESET}"
+  echo "${WHITE} TEST test ${TXTBLD} TEST test ${RESET}"
+}
 
+function colortest2() {
+  for i in {0..255} ; do
+    printf "\x1b[38;5;${i}mcolour${i}\n"
+  done
+}
+
+############################################################
+# tmux helpers
+############################################################
+# window renamer for tmux
 function ssh() {
   if [[ -z $TMUX ]]; then
     command ssh $@
@@ -333,30 +378,5 @@ function ssh() {
     if [[ $renamed == 1 ]]; then
       tmux rename-window "$old_name"
     fi
-  fi
-}
-
-# actually show real hostname in prompt
-# even if a localhost connection
-function mysql() {
-  remote_connection=false
-  while getopts "h" opt; do
-    case "$opt" in
-      h) remote_connection=true
-        ;;
-    esac
-  done
-
-  if [[ "$remote_connection" = true ]]; then
-    export MYSQL_PS1="[mysql] \u@\h:\d> "
-  else
-    export mysql_hostname=`hostname | sed -E 's/\..+$//'`
-    export MYSQL_PS1="[mysql] \u@$mysql_hostname:\d> "
-  fi
-
-  if command -v grcat >/dev/null 2>&1; then
-    command mysql $@ --pager='grcat $HOME/.grc/sql.config'
-  else
-    command mysql $@
   fi
 }

@@ -15,9 +15,8 @@ if [[ -n "$PS1" ]]; then
   HISTCONTROL=ignoredups:ignorespace
 
   # add timestamps to history
-  HISTTIMEFORMAT='%F %T '
-
-  export HISTIGNORE="bg:fg:ls:ll:lrt"
+  export HISTTIMEFORMAT='%F %T '
+  export HISTIGNORE="bg:fg"
 
   # no empty command completion
   shopt -s no_empty_cmd_completion
@@ -29,24 +28,27 @@ if [[ -n "$PS1" ]]; then
   shopt -s cdspell # cd spell guessing
   shopt -s cdable_vars # if path not found assumes is var
 
-  export TERM='xterm-256color'
-  # disable XON/XOFF so ctrl-s works
+  # disable XON/XOFF so ctrl-s works for forward-searching
   stty -ixon
 
-  source $HOME/git-prompt.sh
-  source $HOME/.bash_styles
+  export TERM='xterm-256color'
 
-  # make man page more readable
-  export LESS_TERMCAP_mb=$(printf "\e[1;31m")
-  export LESS_TERMCAP_md=$(printf "\e[1;31m")
-  export LESS_TERMCAP_me=$(printf "\e[0m")
-  export LESS_TERMCAP_se=$(printf "\e[0m")
-  export LESS_TERMCAP_so=$(printf "\e[1;44;33m")
-  export LESS_TERMCAP_ue=$(printf "\e[0m")
-  export LESS_TERMCAP_us=$(printf "\e[1;32m")
+  export EDITOR=vim
+  export INPUTRC=$HOME/.inputrc
 
-  # Customize BASH PS1 prompt to show current GIT repository and branch
-  function soho_pwd() {
+  export JRUBY_HOME=$HOME/.rvm/rubies/jruby-1.7.13/
+  #export NODE_PATH='/usr/local/lib/jsctags:${NODE_PATH}'
+
+  export HSR="$HOME/.homesick/repos"
+  export CDPATH=.:$HSR
+
+  export HostInfoWColor="$ICyan$UserName$IBlue@$IGreen$HostName"
+  export PROMPT_COMMAND=ps1_w_pwd_info
+
+  # Customize BASH PS1 prompt to show current GIT or SVN repository and branch
+  # along with colorization to show local status (red dirty/green clean)
+  function ps1_w_pwd_info() {
+    last_command_exit=$?
     # svn info
     stat .svn > /dev/null 2>&1
     if [ $? -eq 0 ]; then
@@ -67,9 +69,9 @@ if [[ -n "$PS1" ]]; then
         if [ $? -eq 0 ]; then
           SCL=$IRed
         fi
-      SvnInfoColor="$SCL[SVN: $SPWD]"
+      SvnInfoWColor="$SCL[SVN: $SPWD]"
     else
-      SvnInfoColor=""
+      SvnInfoWColor=""
     fi
 
     # git info
@@ -79,48 +81,22 @@ if [[ -n "$PS1" ]]; then
       git status | grep "nothing to commit" >/dev/null 2>&1
       if [ $? -eq 0 ]; then
         # Clean repository - nothing to commit
-        GitInfoColor="${IGreen}$branch_char $GitBranch $check_char$Color_Off"
+        GitInfoWColor="${IGreen}$branch_char $GitBranch $check_char$Color_Off"
       else
         # Changes to working tree
-        GitInfoColor="${IRed}$branch_char $GitBranch $x_char$Color_Off"
+        GitInfoWColor="${IRed}$branch_char $GitBranch $x_char$Color_Off"
       fi
     else
-      GitInfoColor=""
+      GitInfoWColor=""
     fi
 
-    export PBJ="$HostInfoWColor $IYellow$PathFull"
-    export PS1="$PBJ $SvnInfoColor$GitInfoColor$NewLine$arrow_char $Color_Off"
+    # flag if last command had non-zero exit status
+    if [ $last_command_exit -eq 0 ]; then
+      export PBJ="$HostInfoWColor $IYellow$PathFull"
+    else
+      export PBJ="${IRed}$x_char $HostInfoWColor $IYellow$PathFull"
+    fi
+
+    export PS1="$PBJ $SvnInfoWColor$GitInfoWColor$NewLine$arrow_char $Color_Off"
   }
-
-  HostInfoWColor="$IGreen$fire_char $ICyan$UserName$IBlue@$IGreen$HostName"
-  export PROMPT_COMMAND=soho_pwd
-fi
-
-export EDITOR=vim
-export INPUTRC=$HOME/.inputrc
-
-#export NODE_PATH='/usr/local/lib/jsctags:${NODE_PATH}'
-export JRUBY_HOME=$HOME/.rvm/rubies/jruby-1.7.13/
-
-export HSR="$HOME/.homesick/repos/"
-CDPATH=.:$HSR
-
-# make caps lock actually useful
-if command -v xmodmap >/dev/null 2>&1; then
-  xmodmap -e 'clear Lock' -e 'keycode 0x42 = Escape'
-fi
-
-# get bash aliases defs
-if [ -f "$HOME/.bash_aliases" ]; then
-    . "$HOME/.bash_aliases"
-fi
-
-# enable bash completion in interactive shells
-if [ -f /etc/bash_completion ]; then
-    . /etc/bash_completion
-fi
-
-if [ -f $HOME/.homesick/repos/homeshick/homeshick.sh ]; then
-  source "$HOME/.homesick/repos/homeshick/homeshick.sh"
-  source "$HOME/.homesick/repos/homeshick/completions/homeshick-completion.bash"
 fi

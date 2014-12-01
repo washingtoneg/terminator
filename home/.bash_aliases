@@ -3,13 +3,18 @@
 ############################################################
 alias ls='ls --color=auto'
 alias l='ls -CF'
-alias lrt='ls -lartkh'
-alias ll='ls -lkh'
 alias la='ls -a'
-alias lla='la -lakh'
-alias lrs='ls -larSkh'
+alias ll='ls -lkh'
+alias lla='ll -a'
+alias lrt='ll -rt'
+alias lrta='lrt -a'
+alias lrtr='lrt -R'
+alias lrs='ll -rS'
+alias lrsa='lrs -a'
+alias lrsr='lrs -R'
 alias lr='ls -R'
-alias llr='ls -aRlrtkh'
+alias llr='ll -R'
+alias llra='llr -a'
 alias clr='clear'
 alias df='df -kTh'
 alias rm='rm -i'
@@ -22,8 +27,19 @@ alias t1='tail -n1'
 alias h1='head -n1'
 alias vi='vim'
 alias g='git'
-alias sbp="source $HOME/.bash_profile"
-alias hr="cd $HOME/.homesick/repos"
+__git_complete g __git_main
+alias sbp="source_if_exists $HOME/.bash_profile"
+alias hr="cd $HSR"
 alias rakeit="rake db:drop && rake db:create && rake db:migrate && rake db:seed"
 alias beeline="beeline --color=true"
 alias tree="tree -I sandcube"
+
+alias hideme='history -d $((HISTCMD-1)) &&'
+
+export GRC=`which grc 2>/dev/null`
+if [ "$TERM" != dumb ] && [ -n GRC ]
+then
+  alias colourify="$GRC -es --colour=auto"
+  alias mvnk="colourify -c $HOME/.grc/mvn.config mvn"
+  alias kat="colourify -c $HOME/.grc/mvn.config"
+fi
