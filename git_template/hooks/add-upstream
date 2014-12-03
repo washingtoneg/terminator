@@ -1,0 +1,17 @@
+#!/bin/bash
+source $HOME/.bash_func
+exec < /dev/tty
+
+if ask "Has upstream?"; then
+  read -p "${RED}Enter upstream user or organization name: ${RESET}" upstream_org
+  if [ -n "$upstream_org" ]; then
+    protocol=`git config --get remote.origin.url | sed -E 's/(git\@|https:\/\/)([^\/:]+)(:|\/)([^\/]+)\/(.+$)/\1/g'`
+    base_url=`git config --get remote.origin.url | sed -E 's/(git\@|https:\/\/)([^\/:]+)(:|\/)([^\/]+)\/(.+$)/\2/g'`
+    base_separator=`git config --get remote.origin.url | sed -E 's/(git\@|https:\/\/)([^\/:]+)(:|\/)([^\/]+)\/(.+$)/\3/g'`
+    org=`git config --get remote.origin.url | sed -E 's/(git\@|https:\/\/)([^\/:]+)(:|\/)([^\/]+)\/(.+$)/\4/g'`
+    repo=`git config --get remote.origin.url | sed -E 's/(git\@|https:\/\/)([^\/:]+)(:|\/)([^\/]+)\/(.+$)/\5/g'`
+    git remote add upstream "${protocol}${base_url}${base_separator}${upstream_org}/${repo}"
+  else
+    echo "${RED}ERROR: no upstream name provided; so no upstream added${RESET}"
+  fi
+fi

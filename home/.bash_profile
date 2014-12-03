@@ -15,7 +15,7 @@ if [[ 'Darwin' == `uname` ]]; then
 
   source_if_exists $(brew --prefix)/etc/bash_completion
   source_if_exists $(brew --prefix grc)/etc/grc.bashrc
-else # linux
+elif [[ 'Linux' == `uname` ]]; then
   # make caps lock actually useful (in linux)
   if command -v xmodmap >/dev/null 2>&1; then
     xmodmap -e 'clear Lock' -e 'keycode 0x42 = Escape'
