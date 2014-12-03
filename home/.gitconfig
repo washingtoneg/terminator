@@ -65,3 +65,5 @@
   excludesfile = ~/.gitignore
 [init]
   templatedir = ~/.git_template
+[hub]
+  host = github.com
