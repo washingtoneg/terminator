@@ -1,0 +1,15 @@
+#!/bin/bash
+source $HOME/.bash_func
+exec < /dev/tty
+
+name=`coalesce $1 'origin'`
+
+url=`git config --get remote.${name}.url`
+protocol=`git_url_parse $url 1`
+base_url=`git_url_parse $url 2`
+user=`git_url_parse $url 4`
+repo=`git_url_parse $url 5`
+ssh_url="git@${base_url}:${user}/${repo}"
+if ask "convert remote $name: $url to ~~~> $ssh_url"; then
+  git remote set-url $name $ssh_url
+fi

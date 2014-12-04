@@ -1,3 +1,4 @@
+#!/bin/bash
 ############################################################
 # core functions
 ############################################################
@@ -67,6 +68,18 @@ function bash_stat() {
 # ack history
 function hack() {
   history | ack $1
+}
+
+function coalesce() {
+  if [[ -n "$1" ]]; then
+    echo $1
+  else
+    echo $2
+  fi
+}
+
+function git_url_parse() {
+  echo $1 | sed -E "s/(git\@|https:\/\/)([^\/:]+)(:|\/)([^\/]+)\/(.+$)/\\$2/g"
 }
 
 ############################################################
