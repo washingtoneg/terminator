@@ -19,6 +19,7 @@ export Black="\[\033[0;30m\]"        # Black
 export Red="\[\033[0;31m\]"          # Red
 export Green="\[\033[0;32m\]"        # Green
 export Yellow="\[\033[0;33m\]"       # Yellow
+export Orange=`printf "\x1b[38;5;208m"`
 export Blue="\[\033[0;34m\]"         # Blue
 export Purple="\[\033[0;35m\]"       # Purple
 export Cyan="\[\033[0;36m\]"         # Cyan
@@ -101,16 +102,13 @@ export x_char=✘
 
 # misc characters
 export arrow_char=➜
-export circle_recycle_char=♼
-export fire_char=☲
-export nofill_rook_char=♖
 export nofill_star_char=☆
 export notes_char=♫
-export recycle_char=♻
-export rook_char=♜
 export star_char=★
 export volt_char=⚡
 export yingyang_char=☯
+export ogham_or_char=ᚖ
+export shadowed_cicle_char=❍
 export SEGMENT_SEPARATOR=⮀
 
 # make less and man pages more readable

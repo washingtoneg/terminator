@@ -40,9 +40,9 @@ if [[ -n "$PS1" ]]; then
   #export NODE_PATH='/usr/local/lib/jsctags:${NODE_PATH}'
 
   export HSR="$HOME/.homesick/repos"
-  export CDPATH=.:$HSR
+  export CDPATH=.:$HOME:$HSR
 
-  export HostInfoWColor="$ICyan$UserName$IBlue@$IGreen$HostName"
+  export HostInfoWColor="$ICyan$UserName$IGreen@$IBlue$HostName"
   export PROMPT_COMMAND=ps1_w_pwd_info
 
   # Customize BASH PS1 prompt to show current GIT or SVN repository and branch
@@ -78,13 +78,23 @@ if [[ -n "$PS1" ]]; then
     git branch >/dev/null 2>&1
     if [ $? -eq 0 ]; then
       GitBranch=`__git_ps1 "%s"`
+      if [[ $GitBranch =~ ^\( ]]; then
+        char=$detached_head_char
+      else
+        char=$branch_char
+      fi
       git status | grep "nothing to commit" >/dev/null 2>&1
       if [ $? -eq 0 ]; then
         # Clean repository - nothing to commit
-        GitInfoWColor="${IGreen}$branch_char $GitBranch $check_char$Color_Off"
+        GitInfoWColor="${IGreen}$char $GitBranch $check_char$Color_Off"
       else
-        # Changes to working tree
-        GitInfoWColor="${IRed}$branch_char $GitBranch $x_char$Color_Off"
+        git status | egrep '(Changes to be committed|Changes not staged for commit)' >/dev/null 2>&1
+        if [ $? -eq 0 ]; then
+          # Changes to working tree
+          GitInfoWColor="${IRed}$char $GitBranch $x_char$Color_Off"
+        else
+          GitInfoWColor="${Orange}$char $GitBranch $x_char$Color_Off"
+        fi
       fi
     else
       GitInfoWColor=""
