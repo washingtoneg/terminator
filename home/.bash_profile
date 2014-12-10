@@ -9,8 +9,9 @@ source $HOME/.bash_func
 # OS specific features
 if [[ 'Darwin' == `uname` ]]; then
   # using GNU for coreutils vs BSD
-  export PATH="`brew --prefix coreutils`/libexec/gnubin:$PATH"
-  export MANPATH="`brew --prefix coreutils`/libexec/gnuman:$MANPATH"
+  add_brew_paths coreutils gnu-sed
+
+  # gotta have dircolors
   eval `dircolors $HOME/.dir_colors`
 
   source_if_exists $(brew --prefix)/etc/bash_completion

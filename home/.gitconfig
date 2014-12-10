@@ -58,6 +58,8 @@
   # show last tag
   lasttag = describe --tags --abbrev=0
   ctags = !.git/hooks/ctags
+  add-upstream = !.git/hooks/add-upstream
+  http-2-ssh = !.git/hooks/http-2-ssh
 [push]
   # limit no arg push behavior to just the current branch
   default = tracking

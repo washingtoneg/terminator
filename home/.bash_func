@@ -4,12 +4,22 @@
 ############################################################
 # helper to source file if it exists and is not zero in size
 function source_if_exists() {
-  if [[ -s $1 ]]; then
-    if [[ "$debug_source" == true ]]; then echo $1; fi
-    source $1
-  else
-    if [[ "$debug_source" == true ]]; then echo "WARN NO $1 FOUND"; fi
-  fi
+  for arg in $@; do
+    if [[ -s $arg ]]; then
+      if [[ "$debug_source" == true ]]; then echo $arg; fi
+      source $arg
+    else
+      if [[ "$debug_source" == true ]]; then echo "WARN NO $arg FOUND"; fi
+    fi
+  done
+}
+
+function add_brew_paths() {
+  for arg in $@; do
+    if [[ "$debug_source" == true ]]; then echo $arg; fi
+    export PATH="`brew --prefix $arg`/libexec/gnubin:$PATH"
+    export MANPATH="`brew --prefix $arg`/libexec/gnuman:$MANPATH"
+  done
 }
 
 function containsElement() {
@@ -71,15 +81,17 @@ function hack() {
 }
 
 function coalesce() {
-  if [[ -n "$1" ]]; then
-    echo $1
-  else
-    echo $2
-  fi
+  #TODO add error for all empty
+  for arg in $@; do
+    if [[ -n "$arg" ]]; then
+      echo "$arg"
+      break
+    fi
+  done
 }
 
 function git_url_parse() {
-  echo $1 | sed -E "s/(git\@|https:\/\/)([^\/:]+)(:|\/)([^\/]+)\/(.+$)/\\$2/g"
+  echo $1 | sed -E 's#(git\@|https://)([^/:]+)(:|/)([^/]+)/(.+$)#'\\$2'#g'
 }
 
 ############################################################
