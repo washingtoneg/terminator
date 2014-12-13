@@ -6,20 +6,32 @@
 function source_if_exists() {
   for arg in $@; do
     if [[ -s $arg ]]; then
-      if [[ "$debug_source" == true ]]; then echo $arg; fi
+      if_debug_echo $arg
       source $arg
     else
-      if [[ "$debug_source" == true ]]; then echo "WARN NO $arg FOUND"; fi
+      if_debug_echo "WARN NO $arg FOUND"
     fi
   done
 }
 
+function initialize_path() {
+  if [ -z $path_initialized ] && [ "$#" -eq 1 ]; then
+    export PATH=$1:$PATH
+  fi
+}
+
 function add_brew_paths() {
   for arg in $@; do
-    if [[ "$debug_source" == true ]]; then echo $arg; fi
-    export PATH="`brew --prefix $arg`/libexec/gnubin:$PATH"
+    if_debug_echo $arg
+    initialize_path "`brew --prefix $arg`/libexec/gnubin"
     export MANPATH="`brew --prefix $arg`/libexec/gnuman:$MANPATH"
   done
+}
+
+function if_debug_echo() {
+  if [[ "$debug_source" == true ]]; then
+    echo $@
+  fi
 }
 
 function containsElement() {
