@@ -1,6 +1,6 @@
 #!/bin/bash
 ############################################################
-# core functions
+# init helpers
 ############################################################
 # helper to source file if it exists and is not zero in size
 function source_if_exists() {
@@ -15,8 +15,22 @@ function source_if_exists() {
 }
 
 function initialize_path() {
-  if [ -z $path_initialized ] && [ "$#" -eq 1 ]; then
-    export PATH=$1:$PATH
+  if [[ -z $path_initialized ]] && [[ "$#" -eq 1 ]]; then
+    if [[ -z $PATH ]]; then
+      export PATH=$1
+    else
+      export PATH=$1:$PATH
+    fi
+  fi
+}
+
+function initialize_manpath() {
+  if [[ -z $path_initialized ]] && [[ "$#" -eq 1 ]]; then
+    if [[ -z $MANPATH ]]; then
+      export MANPATH=$1
+    else
+      export MANPATH=$1:$MANPATH
+    fi
   fi
 }
 
@@ -24,7 +38,7 @@ function add_brew_paths() {
   for arg in $@; do
     if_debug_echo $arg
     initialize_path "`brew --prefix $arg`/libexec/gnubin"
-    export MANPATH="`brew --prefix $arg`/libexec/gnuman:$MANPATH"
+    initialize_manpath "`brew --prefix $arg`/libexec/gnuman"
   done
 }
 
@@ -34,6 +48,9 @@ function if_debug_echo() {
   fi
 }
 
+############################################################
+# core functions
+############################################################
 function containsElement() {
   local e
   for e in "${@:2}"; do
@@ -102,8 +119,19 @@ function coalesce() {
   done
 }
 
+############################################################
+# git helpers
+############################################################
 function git_url_parse() {
   echo $1 | sed -E 's#(git\@|https://)([^/:]+)(:|/)([^/]+)/(.+$)#'\\$2'#g'
+}
+
+function hub_or_git() {
+  if command -v hub >/dev/null 2>&1; then
+    command hub "$@"
+  else
+    command git "$@"
+  fi
 }
 
 ############################################################
@@ -401,6 +429,8 @@ function colortest2() {
 # window renamer for tmux
 function ssh() {
   if [[ -z $TMUX ]]; then
+    command ssh $@
+  elif [[ ! -z $TMUX ]] && [[ -z $tmux_ssh_rename_enabled ]]; then
     command ssh $@
   else
     local remote=`echo $* | sed 's/\..*$//'`

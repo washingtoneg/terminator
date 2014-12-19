@@ -1,6 +1,7 @@
 ############################################################
 # .bash_profile
 ############################################################
+export debug_source=true
 # load helper functions (Includes source_if_exists)
 source $HOME/.bash_func
 
@@ -56,5 +57,6 @@ done
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
 
 if_debug_echo "Profile PATH: $PATH"
+if_debug_echo "Profile MANPATH: $MANPATH"
 export path_initialized=true
 export PATH

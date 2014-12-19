@@ -1,5 +1,5 @@
 :repos:
   terminator:
-    :origin: https://github.com/rbuchss/terminator.git
+    :origin: git@github.com:rbuchss/terminator.git
   vim-4-eva:
-    :origin: https://github.com/rbuchss/vim-4-eva.git
+    :origin: git@github.com:rbuchss/vim-4-eva.git

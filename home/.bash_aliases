@@ -26,7 +26,7 @@ alias fgrep='fgrep --color=auto --exclude-dir="\.git" --exclude-dir="\.svn"'
 alias t1='tail -n1'
 alias h1='head -n1'
 alias vi='vim'
-alias g='hub'
+alias g='hub_or_git'
 __git_complete g __git_main
 alias sbp="source_if_exists $HOME/.bash_profile"
 alias hr="cd $HSR"
