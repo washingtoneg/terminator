@@ -306,31 +306,33 @@ function add_col_rows() {
 ############################################################
 # misc
 ############################################################
+function q_exit() {
+  while true; do
+    xit='null'
+    echo "${INVIS}"; read -s -t 1 -n 1 xit
+    if [ "$xit" == "q" ]; then
+      echo "Good-bye?!${RESET}"; sleep 1; clear; echo "${VIS}"
+      break
+    else
+      clear
+      echo `${@}`
+    fi
+  done
+}
+
 function clock() {
   night_hours=('22' '23' '00' '01' '02' '03')
   Cnight_hours=('19' '20' '21' '04' '05' '06')
-  while true; do
-  xit='null'
-  echo "${INVIS}"; read -s -t 1 -n 1 xit
-  if [ "$xit" == "q" ]; then
-    echo "Good-bye?!${RESET}"; sleep 1; clear; echo "${VIS}"
-    break
-  else
-    clear
-    timet=$(date +"%R" | sed -E 's/(.{2})/\1 /g' | awk /'/ {print $1}')
+  timet=$(date +"%R" | sed -E 's/(.{2})/\1 /g' | awk /'/ {print $1}')
 
-    if [[ $(containsElement "$timet" "${night_hours[@]}") -eq 1 ]]; then
-      echo "${GREEN}${TXTBLD}"
-    elif [[ $(containsElement "$timet" "${Cnight_hours[@]}") -eq 1 ]]; then
-      echo "${BLUE}${TXTBLD}"
-    else
-      echo "${YELLOW}${TXTBLD}"
-    fi
-    echo "==================================="
-    echo "=========== $(date +"%r") ==========="
-    echo "==================================="
+  if [[ $(containsElement "$timet" "${night_hours[@]}") -eq 1 ]]; then
+    echo "${GREEN}${TXTBLD}"
+  elif [[ $(containsElement "$timet" "${Cnight_hours[@]}") -eq 1 ]]; then
+    echo "${BLUE}${TXTBLD}"
+  else
+    echo "${YELLOW}${TXTBLD}"
   fi
-  done
+  echo -ne `date +"%r"`
 }
 
 # Linux only: Takes a screenshot of your size choice
@@ -445,5 +447,32 @@ function ssh() {
     if [[ $renamed == 1 ]]; then
       tmux rename-window "$old_name"
     fi
+  fi
+}
+
+function battery_health() {
+  HEART='♥'
+  num_hearts=20
+
+  if [[ `uname` == 'Linux' ]]; then
+    current_charge=$(cat /proc/acpi/battery/BAT1/state | grep 'remaining capacity' | awk '{print $3}')
+    total_charge=$(cat /proc/acpi/battery/BAT1/info | grep 'last full capacity' | awk '{print $4}')
+  else
+    battery_info=`ioreg -rc AppleSmartBattery`
+    current_charge=$(echo $battery_info | grep -o '"CurrentCapacity" = [0-9]\+' | awk '{print $3}')
+    total_charge=$(echo $battery_info | grep -o '"MaxCapacity" = [0-9]\+' | awk '{print $3}')
+  fi
+
+  charged_slots=$(echo "(($current_charge/$total_charge)*$num_hearts)+1" | bc -l | cut -d '.' -f 1)
+  if [[ $charged_slots -gt $num_hearts ]]; then
+    charged_slots=$num_hearts
+  fi
+
+  echo -n '#[fg=colour196]'
+  for i in `seq 1 $charged_slots`; do echo -n "$HEART"; done
+
+  if [[ $charged_slots -lt $num_hearts ]]; then
+    echo -n '#[fg=white]'
+    for i in `seq 1 $(echo "$num_hearts-$charged_slots" | bc)`; do echo -n "$HEART"; done
   fi
 }

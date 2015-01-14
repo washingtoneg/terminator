@@ -5,6 +5,7 @@ set completion-query-items 30
 set history-preserve-point on
 set show-all-if-ambiguous on
 set echo-control-characters off
+set visible-stats on
 
 "\e[1;5C":forward-word
 "\e[1;5D":backward-word

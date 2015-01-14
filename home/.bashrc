@@ -36,11 +36,8 @@ if [[ -n "$PS1" ]]; then
   export EDITOR=vim
   export INPUTRC=$HOME/.inputrc
 
-  export JRUBY_HOME=$HOME/.rvm/rubies/jruby-1.7.13/
-  #export NODE_PATH='/usr/local/lib/jsctags:${NODE_PATH}'
-
   export HSR="$HOME/.homesick/repos"
-  export CDPATH=.:$HOME:$HSR
+  export CDPATH=.:$HOME:$HSR:/opt
 
   export HostInfoWColor="$ICyan$UserName$IGreen@$IBlue$HostName"
   export PROMPT_COMMAND=ps1_w_pwd_info
